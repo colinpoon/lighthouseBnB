@@ -21,6 +21,9 @@ CREATE TABLE reservations (
 CREATE TABLE property_reviews (
   id SERIAL PRIMARY KEY,
   guest_id INTEGER NOT NULL REFERENCES users(id),
+  guest_id SERIAL FORIEGN KEY,
+-- one to many? from users(id)?
+
   property_id INTEGER NOT NULL REFERENCES property(id),
   reservation_id INTEGER NOT NULL REFERENCES reservations(id),
   rating SMALLINT,
@@ -28,6 +31,7 @@ CREATE TABLE property_reviews (
 );
 CREATE TABLE properties (
   id SERIAL PRIMARY KEY,
+  -- one to one ?
   owner_id INTEGER NOT NULL REFERENCES users(id),
   title VARCHAR(255) NOT NULL,
   description TEXT,
@@ -43,4 +47,7 @@ CREATE TABLE properties (
   province VARCHAR(255) NOT NULL,
   post_date VARCHAR(255) NOT NULL,
   active BOOLEAN NOT NULL DEFAULT 0
+  -- do i even bother setting a default value of true or false?
 );
+
+---> terminal: what to type to step out of a DB (like cd ..)? \c root?
