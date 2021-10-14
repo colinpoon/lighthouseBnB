@@ -90,16 +90,15 @@ exports.addUser = addUser;
 const getAllReservations = function (guest_id, limit = 10) {
   return pool
     .query(`
-    SELECT *
-    FROM reservations
-    JOIN properties ON reservation.id = properties.id
+    SELECT * FROM reservations
+    JOIN properties ON reservations.property_id = properties.id
     WHERE guest_id = $1
-    LIMIT $2;
-    `,[guest_id, limit])
+    LIMIT $2;`, [guest_id, limit])
     .then((result) => {
       console.log('RESULT', result);
       console.log('RESULT.ROWS', result.rows);
       console.log('[0]', result.rows[0]);
+      return result.rows
     })
     .catch((err) => {
       console.log('ERROR:', err.message);
@@ -121,13 +120,8 @@ const getAllProperties = (options, limit = 10) => {
       return Object.assign({}, result.rows);
     })
     .catch((err) => {
-      console.log(err.message);
+      console.log('ERROR:', err.message);
     });
-  const limitedProperties = {};
-  for (let i = 1; i <= limit; i++) {
-    limitedProperties[i] = properties[i];
-  }
-  return Promise.resolve(limitedProperties);
 };
 
 exports.getAllProperties = getAllProperties;
