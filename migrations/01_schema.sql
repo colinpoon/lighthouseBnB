@@ -1,10 +1,8 @@
-CREATE DATABASE lightbnb;
-
 DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS properties CASCADE;
 DROP TABLE IF EXISTS reservations CASCADE;
 DROP TABLE IF EXISTS property_reviews CASCADE;
-  -- users(id) -----> one to many ------> properties(owner_id)?
+
 CREATE TABLE users (
   id SERIAL PRIMARY KEY NOT NULL,
   name VARCHAR(255) NOT NULL,
@@ -28,7 +26,7 @@ CREATE TABLE property_reviews (
   rating SMALLINT NOT NULL DEFAULT 0,
   messages TEXT
 );
-  -- one to one ?
+
 CREATE TABLE properties (
   id SERIAL PRIMARY KEY NOT NULL,
   owner_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
