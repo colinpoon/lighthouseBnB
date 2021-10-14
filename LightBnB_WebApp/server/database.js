@@ -8,8 +8,10 @@ const pool = new Pool({
   host: 'localhost',
   database: 'lightbnb'
 });
-/// Users
 
+
+
+/// USERS
 /**
 Get a single user from the database given their email.
 @param {String} email The email of the user.
@@ -29,7 +31,6 @@ const getUserWithEmail = function (email) {
     });
 }
 exports.getUserWithEmail = getUserWithEmail;
-
 
 /**
  * Get a single user from the database given their id.
@@ -58,15 +59,32 @@ exports.getUserWithId = getUserWithId;
  * @return {Promise<{}>} A promise to the user.
  */
 const addUser = function (user) {
-  const userId = Object.keys(users).length + 1;
-  user.id = userId;
-  users[userId] = user;
-  return Promise.resolve(user);
+  return pool
+    .query(`
+    INSERT INTO users (name, password, email)
+    VALUES ($1, $2, $3)
+    RETURNING*`, [user.name, user.password, user.email])
+    .then((result) => {
+      // console.log('NAME', user.name);
+      // console.log('PASS', user.password);
+      // console.log('EMAIL', user.email);
+      // console.log('[0]',result.rows[0]);
+      // console.log('[0].ID',result.rows[0].id);
+      if (result.rows[0].id) {
+        return result.rows[0];
+      }
+      return null;
+    })
+    .catch((err) => {
+      console.log('ERROR:', err.message);
+    });
 }
 exports.addUser = addUser;
 
-/// Reservations
 
+
+
+/// RESERVATIONS
 /**
  * Get all reservations for a single user.
  * @param {string} guest_id The id of the user.
@@ -77,8 +95,7 @@ const getAllReservations = function (guest_id, limit = 10) {
 }
 exports.getAllReservations = getAllReservations;
 
-/// Properties
-
+/// PROPERTIES
 /**
  * Get all properties.
  * @param {{}} options An object containing query options.
@@ -102,7 +119,6 @@ const getAllProperties = (options, limit = 10) => {
 };
 
 exports.getAllProperties = getAllProperties;
-
 
 /**
  * Add a property to the database
