@@ -4,12 +4,17 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "local": "npx nodemon -L server/server",
+    "start": "node server/server"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "pg": "^8.7.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.13"
   }
 }
