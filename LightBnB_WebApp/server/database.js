@@ -19,10 +19,7 @@ const getUserWithEmail = function (email) {
   return pool
     .query(`SELECT * FROM users WHERE email = $1`, [email])
     .then((result) => {
-      // console.log('EMAIL---|', result.rows[0].email);
-      // console.log('ID---|', result.rows[0].id);
       if (result.rows[0] && result.rows[0].id) {
-        // console.log('.THEN result.rows[0]---|', result.rows[0]);
         return result.rows[0];
       }
       return null;
@@ -43,8 +40,7 @@ const getUserWithId = function (id) {
   return pool
     .query(`SELECT * FROM users WHERE id = $1`, [id])
     .then((result) => {
-      if (result.rows[0].id) {
-        console.log('.THEN result.rows[0]---|', result.rows[0]);
+      if (result.rows[0] && result.rows[0].id) {
         return result.rows[0];
       }
       return null;
