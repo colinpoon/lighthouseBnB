@@ -9,8 +9,6 @@ const pool = new Pool({
   database: 'lightbnb'
 });
 
-
-
 /// USERS
 /**
 Get a single user from the database given their email.
@@ -22,9 +20,9 @@ const getUserWithEmail = function (email) {
     .query(`SELECT * FROM users WHERE email = $1`, [email])
     .then((result) => {
       if (result.rows[0] && result.rows[0].id) {
-        return result.rows[0];
+        return result.rows[0]
       }
-      return null;
+      return null
     })
     .catch((err) => {
       console.log('ERROR:', err.message);
@@ -42,9 +40,9 @@ const getUserWithId = function (id) {
     .query(`SELECT * FROM users WHERE id = $1`, [id])
     .then((result) => {
       if (result.rows[0] && result.rows[0].id) {
-        return result.rows[0];
+        return result.rows[0]
       }
-      return null;
+      return null
     })
     .catch((err) => {
       console.log('ERROR:', err.message);
@@ -81,30 +79,36 @@ const addUser = function (user) {
 }
 exports.addUser = addUser;
 
+
 /// RESERVATIONS
 /**
  * Get all reservations for a single user.
  * @param {string} guest_id The id of the user.
  * @return {Promise<[{}]>} A promise to the reservations.
  */
+
+
 const getAllReservations = function (guest_id, limit = 10) {
   return pool
     .query(`
     SELECT * FROM reservations
     JOIN properties ON reservations.property_id = properties.id
     WHERE guest_id = $1
-    LIMIT $2;`, [guest_id, limit])
+    LIMIT $2`, [guest_id, limit])
     .then((result) => {
       console.log('RESULT', result);
       console.log('RESULT.ROWS', result.rows);
       console.log('[0]', result.rows[0]);
-      return result.rows
+      return result.rows;
     })
     .catch((err) => {
       console.log('ERROR:', err.message);
     });
 }
 exports.getAllReservations = getAllReservations;
+
+
+
 
 /// PROPERTIES
 /**
@@ -114,10 +118,11 @@ exports.getAllReservations = getAllReservations;
  * @return {Promise<[{}]>}  A promise to the properties.
  */
 const getAllProperties = (options, limit = 10) => {
-  pool
-    .query(`SELECT * FROM properties LIMIT $1`, [limit])
+  return pool
+  .query(`SELECT * FROM properties LIMIT $1`, [limit])
     .then((result) => {
       return Object.assign({}, result.rows);
+      // return result.rows[0];
     })
     .catch((err) => {
       console.log('ERROR:', err.message);
@@ -126,24 +131,40 @@ const getAllProperties = (options, limit = 10) => {
 
 exports.getAllProperties = getAllProperties;
 
+///////////////////
+
+//   id SERIAL PRIMARY KEY NOT NULL,
+//   owner_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+//   title VARCHAR(255) NOT NULL,
+//   description TEXT,
+//   thumbnail_photo_url VARCHAR(255) NOT NULL,
+//   cover_photo_url VARCHAR(255) NOT NULL,
+//   cost_per_night INTEGER  NOT NULL DEFAULT 0,
+//   parking_spaces INTEGER  NOT NULL DEFAULT 0,
+//   number_of_bathrooms INTEGER  NOT NULL DEFAULT 0,
+//   number_of_bedrooms INTEGER  NOT NULL DEFAULT 0,
+//   country VARCHAR(255) NOT NULL,
+//   street VARCHAR(255) NOT NULL,
+//   city VARCHAR(255) NOT NULL,
+//   province VARCHAR(255) NOT NULL,
+//   post_code VARCHAR(255) NOT NULL,
+
+//   active BOOLEAN NOT NULL DEFAULT TRUE
+
+///////////////////
+
+
+
+
 /**
  * Add a property to the database
  * @param {{}} property An object containing all of the property details.
  * @return {Promise<{}>} A promise to the property.
  */
-const addProperty = function (property) {
-  pool
-    .query(`
-  SELECT * 
-  FROM properties 
-  LIMIT`)
-    .then((result) => { })
-    .catch((err) => {
-      console.log(err.message);
-    })
-  const propertyId = Object.keys(properties).length + 1;
-  property.id = propertyId;
-  properties[propertyId] = property;
-  return Promise.resolve(property);
-}
-exports.addProperty = addProperty;
+// const addProperty = function (property) {
+//   const propertyId = Object.keys(properties).length + 1;
+//   property.id = propertyId;
+//   properties[propertyId] = property;
+//   return Promise.resolve(property);
+// }
+// exports.addProperty = addProperty;
